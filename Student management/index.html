@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student</title>
+</head>
+<body>
+    <h1>Student Management System</h1>
+    <input type="text" id="student-name" placeholder="Enter student name">
+    <input type="number" id="student-marks" placeholder="Enter student marks">
+    <button id="add-student">Add Student</button>
+    <button id="show-students">Show Students</button>
+    <div id="student-list"></div>
+    <button id="calculate-average">Calculate Average Marks</button>
+    <button id="filter-passing">Filter Passing Students (>= 40)</button>
+    <div id="average-marks"></div>
+    <script>
+        const students = [{name: 'john', marks: 85}];
+
+        document.getElementById('add-student').addEventListener('click', () => {
+            const name = document.getElementById('student-name').value;
+            const marks = parseFloat(document.getElementById('student-marks').value);
+            if (name && !isNaN(marks)) {
+                students.push({ name, marks });
+                document.getElementById('student-name').value = '';
+                document.getElementById('student-marks').value = '';
+                toast('Student added successfully!');
+            } else {
+                alert('Please enter valid name and marks.');
+            }
+        });
+
+        document.getElementById('show-students').addEventListener('click', () => {
+            const studentListDiv = document.getElementById('student-list');
+            studentListDiv.innerHTML = '';
+            if (students.length === 0) {
+                studentListDiv.innerHTML = '<p>No students available.</p>';
+                return;
+            }
+            const ul = document.createElement('ul');
+            students.map(student => {
+                const li = document.createElement('li');
+                li.textContent = `${student.name}: ${student.marks}`;
+                ul.appendChild(li);
+            });
+            studentListDiv.appendChild(ul);
+        });
+
+        document.getElementById('calculate-average').addEventListener('click', () => {
+            if (students.length === 0) {
+                alert('No students available to calculate average.');
+                return;
+            }
+            const totalMarks = students.reduce((sum, student) => sum + student.marks, 0);
+            const averageMarks = totalMarks / students.length;
+            document.getElementById('average-marks').textContent = `Average Marks: ${averageMarks.toFixed(2)}`;
+        });
+
+        document.getElementById('filter-passing').addEventListener('click', () => {
+            const passingStudents = students.filter(student => student.marks >= 40);
+            const studentListDiv = document.getElementById('student-list');
+            studentListDiv.innerHTML = '';
+            if (passingStudents.length === 0) {
+                studentListDiv.innerHTML = '<p>No passing students.</p>';
+                return;
+            }
+            const ul = document.createElement('ul');
+            passingStudents.forEach(student => {
+                const li = document.createElement('li');
+                li.textContent = `${student.name}: ${student.marks}`;
+                ul.appendChild(li);
+            });
+            studentListDiv.appendChild(ul);
+        });
+    </script>
+</body>
+</html>
